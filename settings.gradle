@@ -1,0 +1,4 @@
+rootProject.name = 'gradle-template-build'
+
+include 'projects:common'
+include 'projects:cli'

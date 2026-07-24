@@ -1,0 +1,55 @@
+plugins {
+	alias libs.plugins.sonarqube
+	id 'jacoco'
+	id 'jacoco-report-aggregation'
+}
+
+description = 'Gradle template build'
+
+repositories {
+	mavenCentral()
+}
+
+jacoco {
+	toolVersion = libs.versions.jacoco.get()
+	// Set the version of JaCoCo to use from the version catalog (libs.versions.toml)
+}
+
+subprojects {
+	apply plugin: 'jacoco' // Apply the jacoco plugin to all subprojects
+}
+
+/**
+ * Configure the JaCoCo aggregation task to aggregate coverage reports from all subprojects.
+ */
+dependencies {
+	// Aggregate JaCoCo reports from subprojects
+	jacocoAggregation project(':projects:common')
+	jacocoAggregation project(':projects:cli')
+}
+
+/**
+ * Configure JaCoCo code coverage reporting for the project.
+ */
+reporting {
+	reports {
+		create("aggregate", JacocoCoverageReport) {
+			testSuiteName = "test"
+		}
+	}
+}
+
+/**
+ * Configure SonarQube integration if the required environment variables (SONAR_TOKEN and SONAR_URI) are set.
+ * This enables continuous code quality analysis and coverage reporting.
+ */
+if (System.getenv('SONAR_TOKEN') != null && System.getenv('SONAR_URI') != null) {
+	sonarqube {
+		properties {
+			property 'sonar.projectKey', 'gradle-template'
+			property 'sonar.host.url', System.getenv('SONAR_URI')
+			property 'sonar.token', System.getenv('SONAR_TOKEN')
+			property 'sonar.coverage.jacoco.xmlReportPaths', "${layout.buildDirectory.get()}/reports/jacoco/aggregate/aggregate.xml"
+		}
+	}
+}
