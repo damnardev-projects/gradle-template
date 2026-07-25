@@ -1,0 +1,17 @@
+[versions]
+java = "21"
+slf4j = "2.0.18"
+logback = "1.6.0"
+junit = "6.1.2"
+assertj = "3.27.7"
+sonarqube = "7.3.1.8318"
+jacoco = "0.8.10"
+
+[libraries]
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+
+[plugins]
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
